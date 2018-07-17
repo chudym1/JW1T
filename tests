@@ -1,0 +1,18 @@
+GoogleCredential credential =
+        GoogleCredential.fromStream(new FileInputStream("MyProject-1234.json"));
+PrivateKey privateKey = credential.getServiceAccountPrivateKey();
+String privateKeyId = credential.getServiceAccountPrivateKeyId();
+
+long now = System.currentTimeMillis();
+
+try {
+    Algorithm algorithm = Algorithm.RSA256(null, privateKey);
+    String signedJwt = JWT.create()
+        .withKeyId(privateKeyId)
+        .withIssuer("123456-compute@developer.gserviceaccount.com")
+        .withSubject("123456-compute@developer.gserviceaccount.com")
+        .withAudience("https://firestore.googleapis.com/google.firestore.v1beta1.Firestore")
+        .withIssuedAt(new Date(now))
+        .withExpiresAt(new Date(now + 3600 * 1000L))
+        .sign(algorithm);
+} catch ...
